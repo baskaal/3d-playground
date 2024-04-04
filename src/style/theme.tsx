@@ -8,5 +8,6 @@ export const THEME = {
   colors: {
     black,
     white,
+    primary: 'grey'
   }
 }

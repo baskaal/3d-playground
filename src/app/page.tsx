@@ -1,14 +1,11 @@
-"use client";
+import Experiment1 from '../app/experiments/1/page'
 
-import { Canvas } from "@react-three/fiber"
-import { Playground } from '../components/Playground';
-
-const Page = () => {
+const Home = () => {
   return (
-    <Canvas>
-      <Playground />
-    </Canvas>
+    <>
+      <Experiment1 />
+    </>
   )
 }
 
-export default Page
+export default Home;
