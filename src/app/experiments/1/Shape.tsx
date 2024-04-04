@@ -1,5 +1,6 @@
-import { QuadraticBezierCurve3, Shape, Vector3, FrontSide } from "three";
+import { QuadraticBezierCurve3, Shape, Vector3 } from "three";
 import { Edges } from "@react-three/drei";
+import { brighten } from '3oilerplate';
 
 export const CustomShape = ({ rotation, config }: any) => {
   const curve = new QuadraticBezierCurve3(
@@ -8,11 +9,11 @@ export const CustomShape = ({ rotation, config }: any) => {
     new Vector3(10, 0, config.offset)
   );
 
-  const fullLength = 120;
+  const fullLength = 150;
   const fullWidth = 20;
   const thickness = 1;
 
-  const innerLength = fullLength * 0.8;
+  const innerLength = fullLength * 0.7;
   const halfWidth = fullWidth / 2;
 
   const shape = new Shape();
@@ -70,11 +71,14 @@ export const CustomShape = ({ rotation, config }: any) => {
 
   shape.moveTo(x + 10, y + 0);
 
-  const getRadians = (degrees: number) => {
-    return degrees * (Math.PI / 180)
-  }
-
-  const extrudeSettings = { depth: 0.25, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
+  const extrudeSettings = {
+    depth: 0.25,
+    bevelEnabled: true,
+    bevelSegments: 5,
+    steps: 1,
+    bevelSize: 1,
+    bevelThickness: 1
+  };
 
   return (
     <mesh rotation={[rotation, 0, 0]}>
@@ -86,9 +90,9 @@ export const CustomShape = ({ rotation, config }: any) => {
           opacity={.95}
           wireframe={config.wireframe}
         />
-        { config.edges && <Edges color='white' /> }
+        { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
       </mesh>
-      <mesh position={[10, -100, config.offset]} rotation={[0, 0, getRadians(180)]}>
+      <mesh position={[10, -100, config.offset]} rotation={[0, 0, Math.PI]}>
         <extrudeGeometry args={[shape, extrudeSettings]} />
         <meshLambertMaterial
           color={config.color}
@@ -96,7 +100,7 @@ export const CustomShape = ({ rotation, config }: any) => {
           opacity={.95}
           wireframe={config.wireframe}
         />
-        { config.edges && <Edges color='white' /> }
+        { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
       </mesh>
     </mesh>
   )

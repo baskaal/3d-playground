@@ -16,7 +16,7 @@ const Index = ({ config }: any) => {
   useFrame(() => {
     if (!config.rotateObject) return;
 
-    wrapperMeshRef.current.rotation.x += 0.5;
+    wrapperMeshRef.current.rotation.x += 0.02;
   })
 
   const getRotation = (amount: number, index: number) => {
@@ -28,14 +28,14 @@ const Index = ({ config }: any) => {
       <ambientLight />
 
       { config.lights && (
-        <directionalLight castShadow position={[0, 800, 0]} shadow-mapSize={[800, 800]}>
+        <directionalLight castShadow position={[0, 800, 0]} shadow-mapSize={[800, 800]} intensity={5}>
           <orthographicCamera args={[-10, 10, 10, -10]} />
         </directionalLight>
       )}
 
       <mesh ref={wrapperMeshRef}>
         { times(config.amount, (i) => (
-          <CustomShape config={config} rotation={getRotation(config.amount, i)} />
+          <CustomShape key={`shape-${i}`} config={config} rotation={getRotation(config.amount, i)} />
         ))}
       </mesh>
 
@@ -84,7 +84,7 @@ const Wrapper = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [config, setConfig] = useState({
     color: 'red',
-    amount: 12,
+    amount: 15,
     offset: 15,
     distance: 100,
     rotateObject: true,
