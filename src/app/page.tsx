@@ -1,4 +1,4 @@
-import Experiment1 from '../app/experiments/1/page'
+import Experiment1 from './experiments/1/page'
 
 const Home = () => {
   return (
