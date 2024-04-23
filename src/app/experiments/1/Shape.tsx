@@ -96,7 +96,7 @@ export const CustomShape = ({ rotation, config }: any) => {
         { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
       </mesh>
 
-      <Mask colorWrite={false} depthWrite={false} position={[0, 0, 66]} id={1}>
+      <Mask colorWrite={true} depthWrite={false} position={[0, 0, 66]} id={1}>
         <boxGeometry args={[120, 20, 30]} />
         <meshBasicMaterial />
       </Mask>
