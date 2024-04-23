@@ -1,4 +1,4 @@
-import { QuadraticBezierCurve3, Shape, Vector3 } from "three";
+import { BackSide, DoubleSide, FrontSide, QuadraticBezierCurve3, Shape, Vector3 } from "three";
 import { Edges, Effects, Mask, useMask } from "@react-three/drei";
 import { brighten } from '3oilerplate';
 
@@ -88,15 +88,14 @@ export const CustomShape = ({ rotation, config }: any) => {
         <tubeGeometry args={[curve, 20, 4, 20, false]} />
         <meshPhongMaterial
           color={config.color}
-          transparent={true}
-          opacity={.95}
           wireframe={config.wireframe}
+          side={DoubleSide}
           {...maskProps}
         />
         { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
       </mesh>
 
-      <Mask colorWrite={true} depthWrite={false} position={[0, 0, 66]} id={1}>
+      <Mask colorWrite={false} depthWrite={false} position={[0, 0, 66]} id={1}>
         <boxGeometry args={[120, 20, 30]} />
         <meshBasicMaterial />
       </Mask>
@@ -105,8 +104,6 @@ export const CustomShape = ({ rotation, config }: any) => {
         <extrudeGeometry args={[shape, extrudeSettings]} />
         <meshPhongMaterial
           color={config.color}
-          transparent={true}
-          opacity={.95}
           wireframe={config.wireframe}
         />
         { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
