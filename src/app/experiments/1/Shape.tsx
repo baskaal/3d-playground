@@ -1,17 +1,17 @@
 import { QuadraticBezierCurve3, Shape, Vector3 } from "three";
-import { Edges } from "@react-three/drei";
+import { Edges, Effects, Mask, useMask } from "@react-three/drei";
 import { brighten } from '3oilerplate';
 
 export const CustomShape = ({ rotation, config }: any) => {
   const curve = new QuadraticBezierCurve3(
-    new Vector3(-10, 0, config.offset),
-    new Vector3(0, 0, config.offset + 10),
-    new Vector3(10, 0, config.offset)
+    new Vector3(-48, -4.5, -1 + config.offset),
+    new Vector3(0, -4.5, -1 + config.offset + 50),
+    new Vector3(48, -4.5, -1 + config.offset)
   );
 
-  const fullLength = 150;
-  const fullWidth = 20;
-  const thickness = 1;
+  const fullLength = 750;
+  const fullWidth = 100;
+  const thickness = 8;
 
   const innerLength = fullLength * 0.7;
   const halfWidth = fullWidth / 2;
@@ -23,10 +23,10 @@ export const CustomShape = ({ rotation, config }: any) => {
   shape.lineTo(x + 0, y + 0);
 
   // shape.bezierCurveTo(
-  //   startVector bezier x,
-  //   startVector bezier y,
-  //   endVector bezier x,
-  //   endVector bezier y,
+  //   startVector bezier x-axis,
+  //   startVector bezier y-axis,
+  //   endVector bezier x-axis,
+  //   endVector bezier y-axis,
   //   endVector pos x,
   //   endVector pos x,
   // );
@@ -41,7 +41,7 @@ export const CustomShape = ({ rotation, config }: any) => {
   );
 
   shape.bezierCurveTo(
-    x + halfWidth + halfWidth,
+    x + fullWidth,
     y + fullLength,
     x + fullWidth,
     y + fullWidth - thickness,
@@ -72,7 +72,7 @@ export const CustomShape = ({ rotation, config }: any) => {
   shape.moveTo(x + 10, y + 0);
 
   const extrudeSettings = {
-    depth: 0.25,
+    depth: 2,
     bevelEnabled: true,
     bevelSegments: 5,
     steps: 1,
@@ -80,21 +80,30 @@ export const CustomShape = ({ rotation, config }: any) => {
     bevelThickness: 1
   };
 
+  const maskProps = useMask(1, false)
+
   return (
     <mesh rotation={[rotation, 0, 0]}>
       <mesh>
-        <tubeGeometry args={[curve, 20, 1, 10, false]} />
-        <meshLambertMaterial
+        <tubeGeometry args={[curve, 20, 4, 20, false]} />
+        <meshPhongMaterial
           color={config.color}
           transparent={true}
           opacity={.95}
           wireframe={config.wireframe}
+          {...maskProps}
         />
         { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
       </mesh>
-      <mesh position={[10, -100, config.offset]} rotation={[0, 0, Math.PI]}>
+
+      <Mask colorWrite={false} depthWrite={false} position={[0, 0, 66]} id={1}>
+        <boxGeometry args={[120, 20, 30]} />
+        <meshBasicMaterial />
+      </Mask>
+
+      <mesh position={[50, -100, config.offset]} rotation={[0, 0, Math.PI]}>
         <extrudeGeometry args={[shape, extrudeSettings]} />
-        <meshLambertMaterial
+        <meshPhongMaterial
           color={config.color}
           transparent={true}
           opacity={.95}

@@ -24,7 +24,7 @@ const Index = ({ config }: any) => {
   }
 
   return (
-    <>
+    <group scale={0.2}>
       <ambientLight />
 
       { config.lights && (
@@ -50,7 +50,7 @@ const Index = ({ config }: any) => {
         minPolarAngle={1.5}
         maxPolarAngle={1.5}
       />
-    </>
+    </group>
   )
 }
 
@@ -59,13 +59,13 @@ const Wrapper = () => {
   const [config, setConfig] = useState({
     color: 'red',
     amount: 15,
-    offset: 15,
-    zoom: 100,
-    rotateObject: true,
-    rotateScene: true,
+    offset: 50,
     edges: true,
     lights: true,
     wireframe: false,
+    rotateObject: true,
+    rotateScene: true,
+    zoom: 75,
   });
 
   return (
