@@ -13,8 +13,8 @@ export const MenuToggle = s.div(() => ({
   fontSize: '.5rem',
   margin: '1rem',
   backgroundColor: 'rgba(0, 0, 0, .7)',
-  borderRadius: '.25rem',
-}));
+  borderRadius: '.25rem'
+}))
 
 export const Menu = s.div(() => ({
   position: 'fixed',
@@ -27,14 +27,14 @@ export const Menu = s.div(() => ({
   borderRadius: '.25rem',
   width: 'calc(100% - 2rem)',
   maxWidth: '400px'
-}));
+}))
 
 export const MenuItem = s.div(() => ({
   display: 'flex',
   height: '3rem',
   alignItems: 'center',
-  justifyContent: 'space-between',
-}));
+  justifyContent: 'space-between'
+}))
 
 export const MenuCredits = s.div(() => ({
   display: 'flex',
@@ -43,5 +43,5 @@ export const MenuCredits = s.div(() => ({
   margin: 'm',
   left: 0,
   right: 0,
-  bottom: 0,
-}));
+  bottom: 0
+}))

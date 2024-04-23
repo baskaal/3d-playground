@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { PropsWithChildren, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+import { PropsWithChildren } from 'react'
+import dynamic from 'next/dynamic'
 import { s, ThemeProvider, GlobalStyle } from '3oilerplate'
-import { THEME } from '@/style/theme';
+import { THEME } from '@/style/theme'
 
 import 'reset-css/reset.css'
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const DynamicWrapper = dynamic(() => Promise.resolve(({ children }: PropsWithChildren) => <>{ children }</>), {
   ssr: false
@@ -22,7 +22,7 @@ export const SApp = s.div(() => ({
   fontSize: '.8rem'
 }))
 
-export default function App ({ children }: PropsWithChildren) {
+const App = ({ children }: PropsWithChildren) => {
   return (
     <html lang="en">
       <body>
@@ -38,3 +38,5 @@ export default function App ({ children }: PropsWithChildren) {
     </html>
   )
 }
+
+export default App

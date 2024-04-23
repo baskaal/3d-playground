@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
-import { useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { Settings } from "react-feather";
+import { useRef, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei'
+import { Settings } from 'react-feather'
 import { Select, Input, Checkbox } from '3oilerplate'
-import { times } from "lodash";
-import { CustomShape } from "./Shape";
-import { Menu, MenuCredits, MenuItem, MenuToggle } from "@/app/components/Menu";
+import { times } from 'lodash'
+import { CustomShape } from './Shape'
+import { Menu, MenuCredits, MenuItem, MenuToggle } from '@/app/components/Menu'
 
 const Index = ({ config }: any) => {
   const wrapperMeshRef = useRef<any>()
-  const { camera } = useThree();
+  const { camera } = useThree()
 
   useFrame(() => {
-    if (!config.rotateObject) return;
+    if (!config.rotateObject) return
 
-    wrapperMeshRef.current.rotation.x += 0.02;
+    wrapperMeshRef.current.rotation.x += 0.02
   })
 
   const getRotation = (amount: number, index: number) => {
-    return ((360 / amount) * index) * (Math.PI / 180);
+    return ((360 / amount) * index) * (Math.PI / 180)
   }
 
   return (
@@ -55,7 +55,7 @@ const Index = ({ config }: any) => {
 }
 
 const Wrapper = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false)
   const [config, setConfig] = useState({
     color: 'red',
     amount: 15,
@@ -65,8 +65,8 @@ const Wrapper = () => {
     wireframe: false,
     rotateObject: true,
     rotateScene: true,
-    zoom: 75,
-  });
+    zoom: 75
+  })
 
   return (
     <>
@@ -83,7 +83,7 @@ const Wrapper = () => {
           <MenuItem>
             <span>Color</span>
             <Select
-              s={{ 'Select': { padding: 'xs' }, width: '100px' }}
+              s={{ Select: { padding: 'xs' }, width: '100px' }}
               value={config.color}
               onChange={(value: string) => setConfig({ ...config, color: value }) }
               options={[
@@ -91,7 +91,7 @@ const Wrapper = () => {
                 { label: 'Green', value: 'green' },
                 { label: 'Gold', value: 'gold' },
                 { label: 'White', value: 'white' },
-                { label: 'Grey', value: 'grey' },
+                { label: 'Grey', value: 'grey' }
               ]}
             />
           </MenuItem>
@@ -168,4 +168,4 @@ const Wrapper = () => {
   )
 }
 
-export default Wrapper;
+export default Wrapper
