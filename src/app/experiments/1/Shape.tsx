@@ -1,5 +1,6 @@
 import { DoubleSide, QuadraticBezierCurve3, Shape, Vector3 } from 'three'
-import { Edges, Mask, useMask } from '@react-three/drei'
+import { Base, Geometry, Subtraction } from '@react-three/csg'
+import { Edges } from '@react-three/drei'
 import { brighten } from '3oilerplate'
 
 export const CustomShape = ({ rotation, config }: any) => {
@@ -71,32 +72,43 @@ export const CustomShape = ({ rotation, config }: any) => {
     bevelThickness: 1
   }
 
-  const maskProps = useMask(1, false)
-
   return (
     <mesh rotation={[rotation, 0, 0]}>
       <mesh>
-        <tubeGeometry args={[curve, 20, 4, 20, false]} />
+
         <meshPhongMaterial
           color={config.color}
           wireframe={config.wireframe}
           side={DoubleSide}
-          {...maskProps}
         />
+
+        <Geometry>
+          <Base>
+            <tubeGeometry args={[curve, 20, 4, 20, false]} />
+          </Base>
+          <Subtraction position={[0, -5, 48]}>
+            <boxGeometry args={[100, 12, 5]} />
+          </Subtraction>
+          {/* TODO: Make tube more rounded and use these to cut off sides */}
+          {/* <Subtraction position={[55, -5, 50]}>
+            <boxGeometry args={[8, 12, 8]} />
+          </Subtraction>
+          <Subtraction position={[-55, -5, 50]}>
+            <boxGeometry args={[8, 12, 8]} />
+          </Subtraction> */}
+        </Geometry>
+
         { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
       </mesh>
 
-      <Mask colorWrite={false} depthWrite={false} position={[0, 0, 66]} id={1}>
-        <boxGeometry args={[120, 20, 30]} />
-        <meshBasicMaterial />
-      </Mask>
-
       <mesh position={[50, -100, config.offset]} rotation={[0, 0, Math.PI]}>
         <extrudeGeometry args={[shape, extrudeSettings]} />
+
         <meshPhongMaterial
           color={config.color}
           wireframe={config.wireframe}
         />
+
         { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
       </mesh>
     </mesh>

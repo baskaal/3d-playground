@@ -9,5 +9,15 @@ export const THEME = {
     black,
     white,
     primary: 'grey'
+  },
+  components: {
+    Input: {
+      variants: {
+        isDisabled: {
+          pointerEvents: 'none',
+          opacity: 0.5
+        }
+      }
+    }
   }
 }

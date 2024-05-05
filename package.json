@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "3oilerplate": "^0.3.5",
+    "@react-three/csg": "^3.2.0",
     "@react-three/drei": "^9.97.5",
     "@react-three/fiber": "^8.15.16",
     "@types/lodash": "^4.14.202",

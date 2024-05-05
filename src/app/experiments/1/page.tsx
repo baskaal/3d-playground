@@ -1,60 +1,13 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { useState } from 'react'
+import { Canvas } from '@react-three/fiber'
 import { Settings } from 'react-feather'
-import { Select, Input, Checkbox } from '3oilerplate'
-import { times } from 'lodash'
-import { CustomShape } from './Shape'
+import { Select, Input, Checkbox, Spacer } from '3oilerplate'
 import { Menu, MenuCredits, MenuItem, MenuToggle } from '@/app/components/Menu'
+import { Scene } from './Scene'
 
-const Index = ({ config }: any) => {
-  const wrapperMeshRef = useRef<any>()
-  const { camera } = useThree()
-
-  useFrame(() => {
-    if (!config.rotateObject) return
-
-    wrapperMeshRef.current.rotation.x += 0.02
-  })
-
-  const getRotation = (amount: number, index: number) => {
-    return ((360 / amount) * index) * (Math.PI / 180)
-  }
-
-  return (
-    <group scale={0.2}>
-      <ambientLight />
-
-      { config.lights && (
-        <directionalLight castShadow position={[0, 800, 0]} shadow-mapSize={[800, 800]} intensity={5}>
-          <orthographicCamera args={[-10, 10, 10, -10]} />
-        </directionalLight>
-      )}
-
-      <mesh ref={wrapperMeshRef}>
-        { times(config.amount, (i) => (
-          <CustomShape key={`shape-${i}`} config={config} rotation={getRotation(config.amount, i)} />
-        ))}
-      </mesh>
-
-      <OrbitControls
-        camera={camera}
-        minDistance={config.zoom}
-        maxDistance={config.zoom}
-        autoRotate={config.rotateScene}
-        enableZoom={false}
-        enablePan={false}
-        target={[0, 0, 0]}
-        minPolarAngle={1.5}
-        maxPolarAngle={1.5}
-      />
-    </group>
-  )
-}
-
-const Wrapper = () => {
+const Page = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [config, setConfig] = useState({
     color: 'red',
@@ -64,14 +17,16 @@ const Wrapper = () => {
     lights: true,
     wireframe: false,
     rotateObject: true,
+    objectRotationSpeed: 0.01,
     rotateScene: true,
+    sceneRotationSpeed: 1,
     zoom: 75
   })
 
   return (
     <>
       <Canvas>
-        <Index config={config} />
+        <Scene config={config} />
       </Canvas>
 
       <MenuToggle onClick={() => setMenuOpen(!menuOpen)}>
@@ -127,17 +82,39 @@ const Wrapper = () => {
           </MenuItem>
           <MenuItem>
             <span>Rotate Object</span>
-            <Checkbox
-              isChecked={config.rotateObject}
-              onChange={(value: boolean) => setConfig({ ...config, rotateObject: value }) }
-            />
+            <Spacer s={{ width: 'auto', flexDirection: 'row' }}>
+              <Checkbox
+                isChecked={config.rotateObject}
+                onChange={(value: boolean) => setConfig({ ...config, rotateObject: value }) }
+              />
+              <Input
+                s={{ padding: 'xs', width: '80px !important' }}
+                type="number"
+                step={0.01}
+                isDisabled={!config.rotateObject}
+                defaultValue={config.objectRotationSpeed}
+                onChange={(value: any) => setConfig({ ...config, objectRotationSpeed: Number(value) }) }
+                style={{ width: '60px', color: 'white' }}
+              />
+            </Spacer>
           </MenuItem>
           <MenuItem>
             <span>Rotate Scene</span>
-            <Checkbox
-              isChecked={config.rotateScene}
-              onChange={(value: boolean) => setConfig({ ...config, rotateScene: value }) }
-            />
+            <Spacer s={{ width: 'auto', flexDirection: 'row' }}>
+              <Checkbox
+                isChecked={config.rotateScene}
+                onChange={(value: boolean) => setConfig({ ...config, rotateScene: value }) }
+              />
+              <Input
+                s={{ padding: 'xs', width: '80px !important' }}
+                type="number"
+                step={1}
+                isDisabled={!config.rotateScene}
+                defaultValue={config.sceneRotationSpeed}
+                onChange={(value: any) => setConfig({ ...config, sceneRotationSpeed: Number(value) }) }
+                style={{ width: '60px', color: 'white' }}
+              />
+            </Spacer>
           </MenuItem>
           <MenuItem>
             <span>Edges</span>
@@ -168,4 +145,4 @@ const Wrapper = () => {
   )
 }
 
-export default Wrapper
+export default Page
