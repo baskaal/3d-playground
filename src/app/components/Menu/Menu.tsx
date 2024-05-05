@@ -28,31 +28,28 @@ export const Menu = ({ setConfig, config, credits }: any) => (
     <SMenuItem>
       <span>Shape Amount</span>
       <Input
-        s={{ padding: 'xs', width: '80px !important' }}
+        s={{ color: 'white', padding: 'xs', width: '100px' }}
         type="number"
         defaultValue={config.amount}
         onChange={(value: any) => setConfig({ ...config, amount: Number(value) }) }
-        style={{ width: '60px', color: 'white' }}
       />
     </SMenuItem>
     <SMenuItem>
       <span>Shape Offset</span>
       <Input
-        s={{ padding: 'xs', width: '80px !important' }}
+        s={{ color: 'white', padding: 'xs', width: '100px' }}
         type="number"
         defaultValue={config.offset}
         onChange={(value: any) => setConfig({ ...config, offset: Number(value) }) }
-        style={{ width: '60px', color: 'white' }}
       />
     </SMenuItem>
     <SMenuItem>
       <span>Zoom</span>
       <Input
-        s={{ padding: 'xs', width: '80px !important' }}
+        s={{ color: 'white', padding: 'xs', width: '100px' }}
         type="number"
         defaultValue={config.zoom}
         onChange={(value: any) => setConfig({ ...config, zoom: Number(value) }) }
-        style={{ width: '60px', color: 'white' }}
       />
     </SMenuItem>
     <SMenuItem>
@@ -63,13 +60,12 @@ export const Menu = ({ setConfig, config, credits }: any) => (
           onChange={(value: boolean) => setConfig({ ...config, rotateObject: value }) }
         />
         <Input
-          s={{ padding: 'xs', width: '80px !important' }}
+          s={{ color: 'white', padding: 'xs', width: '100px' }}
           type="number"
-          step={0.01}
+          step={0.1}
           isDisabled={!config.rotateObject}
           defaultValue={config.objectRotationSpeed}
           onChange={(value: any) => setConfig({ ...config, objectRotationSpeed: Number(value) }) }
-          style={{ width: '60px', color: 'white' }}
         />
       </Spacer>
     </SMenuItem>
@@ -81,13 +77,12 @@ export const Menu = ({ setConfig, config, credits }: any) => (
           onChange={(value: boolean) => setConfig({ ...config, rotateScene: value }) }
         />
         <Input
-          s={{ padding: 'xs', width: '80px !important' }}
+          s={{ color: 'white', padding: 'xs', width: '100px' }}
           type="number"
           step={1}
           isDisabled={!config.rotateScene}
           defaultValue={config.sceneRotationSpeed}
           onChange={(value: any) => setConfig({ ...config, sceneRotationSpeed: Number(value) }) }
-          style={{ width: '60px', color: 'white' }}
         />
       </Spacer>
     </SMenuItem>
