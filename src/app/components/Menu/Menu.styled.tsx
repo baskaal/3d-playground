@@ -1,6 +1,6 @@
 import { s } from '3oilerplate'
 
-export const MenuToggle = s.div(() => ({
+export const SMenuToggle = s.div(() => ({
   position: 'fixed',
   display: 'flex',
   alignItems: 'center',
@@ -16,7 +16,7 @@ export const MenuToggle = s.div(() => ({
   borderRadius: '.25rem'
 }))
 
-export const Menu = s.div(() => ({
+export const SMenu = s.div(() => ({
   position: 'fixed',
   top: '3.5rem',
   right: 0,
@@ -29,14 +29,14 @@ export const Menu = s.div(() => ({
   maxWidth: '400px'
 }))
 
-export const MenuItem = s.div(() => ({
+export const SMenuItem = s.div(() => ({
   display: 'flex',
   height: '3rem',
   alignItems: 'center',
   justifyContent: 'space-between'
 }))
 
-export const MenuCredits = s.div(() => ({
+export const SMenuCredits = s.div(() => ({
   display: 'flex',
   position: 'absolute',
   justifyContent: 'center',

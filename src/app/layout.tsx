@@ -7,8 +7,6 @@ import { THEME } from '@/style/theme'
 
 import 'reset-css/reset.css'
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-
 const DynamicWrapper = dynamic(() => Promise.resolve(({ children }: PropsWithChildren) => <>{ children }</>), {
   ssr: false
 })

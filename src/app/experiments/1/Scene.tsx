@@ -1,24 +1,36 @@
 'use client'
 
 import { useRef } from 'react'
+import { times } from 'lodash'
+import { MeshPhongMaterial } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import { times } from 'lodash'
-import { CustomShape } from './Shape'
+import { Object } from './Object'
+import { getGeometryOne, getGeometryTwo } from './geometries'
 
 export const Scene = ({ config }: any) => {
   const objectRef = useRef<any>()
   const { camera } = useThree()
 
-  useFrame(() => {
+  useFrame((state, renderPriority) => {
     if (!config.rotateObject) return
 
-    objectRef.current.rotation.x += config.objectRotationSpeed
+    objectRef.current.rotation.x += (renderPriority * config.objectRotationSpeed)
   })
 
   const getRotation = (amount: number, index: number) => {
     return ((360 / amount) * index) * (Math.PI / 180)
   }
+
+  const material = new MeshPhongMaterial({
+    color: config.color,
+    wireframe: config.wireframe
+  })
+
+  const shapes = [
+    { geometry: getGeometryOne(), position: [0, 0, config.offset] },
+    { geometry: getGeometryTwo(), position: [50, -100, config.offset], rotation: [0, 0, Math.PI] }
+  ]
 
   return (
     <group scale={0.2}>
@@ -32,8 +44,14 @@ export const Scene = ({ config }: any) => {
 
       <mesh ref={objectRef}>
         { times(config.amount, (i) => (
-          <CustomShape key={`shape-${i}`} config={config} rotation={getRotation(config.amount, i)} />
-        ))}
+          <Object
+            shapes={shapes}
+            material={material}
+            config={config}
+            rotation={getRotation(config.amount, i)}
+            key={`object-${i}`}
+          />
+        )) }
       </mesh>
 
       <OrbitControls
