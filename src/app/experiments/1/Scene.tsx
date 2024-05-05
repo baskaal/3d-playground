@@ -3,14 +3,13 @@
 import { useRef } from 'react'
 import { times } from 'lodash'
 import { MeshPhongMaterial } from 'three'
-import { useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { Object } from './Object'
 import { getGeometryOne, getGeometryTwo } from './geometries'
 
 export const Scene = ({ config }: any) => {
   const objectRef = useRef<any>()
-  const { camera } = useThree()
 
   useFrame((state, renderPriority) => {
     if (!config.rotateObject) return
@@ -33,16 +32,17 @@ export const Scene = ({ config }: any) => {
   ]
 
   return (
-    <group scale={0.2}>
-      <ambientLight />
+    <group>
+      <PerspectiveCamera makeDefault position={[100, 0, 0]}>
+        { config.lights && (
+          <>
+            <ambientLight />
+            <directionalLight castShadow position={[0, 800, 0]} shadow-mapSize={[800, 800]} intensity={5} />
+          </>
+        ) }
+      </PerspectiveCamera>
 
-      { config.lights && (
-        <directionalLight castShadow position={[0, 800, 0]} shadow-mapSize={[800, 800]} intensity={5}>
-          <orthographicCamera args={[-10, 10, 10, -10]} />
-        </directionalLight>
-      )}
-
-      <mesh ref={objectRef}>
+      <group scale={0.2} ref={objectRef}>
         { times(config.amount, (i) => (
           <Object
             shapes={shapes}
@@ -52,10 +52,9 @@ export const Scene = ({ config }: any) => {
             key={`object-${i}`}
           />
         )) }
-      </mesh>
+      </group>
 
       <OrbitControls
-        camera={camera}
         minDistance={config.zoom}
         maxDistance={config.zoom}
         autoRotate={config.rotateScene}
@@ -63,8 +62,6 @@ export const Scene = ({ config }: any) => {
         enableZoom={false}
         enablePan={false}
         target={[0, 0, 0]}
-        minPolarAngle={1.5}
-        maxPolarAngle={1.5}
       />
     </group>
   )
