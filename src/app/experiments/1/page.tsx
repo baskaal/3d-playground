@@ -17,8 +17,8 @@ const Page = () => {
     rotateObject: true,
     rotateScene: true,
     objectRotationSpeed: 1,
-    sceneRotationSpeed: 1,
-    zoom: 75
+    sceneRotationSpeed: 5,
+    zoom: 100
   })
 
   return (
