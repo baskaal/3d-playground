@@ -2,15 +2,16 @@
 
 import { useState } from 'react'
 import { Canvas } from '@react-three/fiber'
+import { Box } from '3oilerplate'
 import { Menu, MenuToggle } from '@/app/components'
 import { Scene } from './Scene'
 
 const Page = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [config, setConfig] = useState({
-    color: 'red',
-    amount: 15,
-    offset: 50,
+    color: '#A69FB8',
+    amount: 20,
+    offset: 5,
     edges: true,
     lights: true,
     wireframe: false,
@@ -23,9 +24,11 @@ const Page = () => {
 
   return (
     <>
-      <Canvas>
-        <Scene config={config} />
-      </Canvas>
+      <Box s={{ width: '100%', div: { mih: '100vh' } }}>
+        <Canvas>
+          <Scene config={config} />
+        </Canvas>
+      </Box>
 
       <MenuToggle
         setMenuOpen={setMenuOpen}

@@ -23,7 +23,8 @@ export const Scene = ({ config }: any) => {
 
   const material = new MeshPhongMaterial({
     color: config.color,
-    wireframe: config.wireframe
+    wireframe: config.wireframe,
+    shininess: 500
   })
 
   const shapes = [
@@ -34,11 +35,9 @@ export const Scene = ({ config }: any) => {
   return (
     <group>
       <PerspectiveCamera makeDefault position={[100, 0, 0]}>
+        <ambientLight />
         { config.lights && (
-          <>
-            <ambientLight />
-            <directionalLight castShadow position={[0, 800, 0]} shadow-mapSize={[800, 800]} intensity={5} />
-          </>
+          <directionalLight castShadow position={[0, 800, 0]} shadow-mapSize={[800, 800]} intensity={5} />
         ) }
       </PerspectiveCamera>
 

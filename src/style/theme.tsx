@@ -1,6 +1,6 @@
-import { darken, brighten } from '3oilerplate'
+import { darken, lighten } from '3oilerplate'
 
-const black = brighten('#000', 0.25)
+const black = lighten('#000', 0.25)
 const white = darken('#fff', 0.25)
 
 export const THEME = {

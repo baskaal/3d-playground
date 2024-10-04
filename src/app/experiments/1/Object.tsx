@@ -1,5 +1,5 @@
 import { Edges } from '@react-three/drei'
-import { brighten } from '3oilerplate'
+import { lighten } from '3oilerplate'
 
 export const Object = ({ shapes, material, rotation, config }: any) => (
   <mesh rotation={[rotation, 0, 0]}>
@@ -11,7 +11,7 @@ export const Object = ({ shapes, material, rotation, config }: any) => (
         material={material}
         key={`mesh-${index}`}
       >
-        { config.edges && <Edges color={brighten(config.color, 1.5)} /> }
+        { config.edges && <Edges color={lighten(config.color, 0.5)} /> }
       </mesh>
     )) }
   </mesh>

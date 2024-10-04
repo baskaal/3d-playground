@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { s } from '3oilerplate'
 
 export const SMenuToggle = s.div(() => ({
