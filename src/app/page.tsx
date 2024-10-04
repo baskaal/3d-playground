@@ -1,9 +1,9 @@
-import Experiment1 from './experiments/1/page'
+import Project1 from './projects/1/page'
 
 const Home = () => {
   return (
     <>
-      <Experiment1 />
+      <Project1 />
     </>
   )
 }

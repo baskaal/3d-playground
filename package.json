@@ -8,12 +8,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "3oilerplate": "^3.0.10",
     "@react-three/csg": "^3.2.0",
     "@react-three/drei": "^9.97.5",
     "@react-three/fiber": "^8.15.16",
     "@types/lodash": "^4.14.202",
     "@types/three": "^0.161.2",
+    "3oilerplate": "^3.0.10",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.2",
@@ -23,11 +23,13 @@
     "react": "^18",
     "react-dom": "^18",
     "react-feather": "^2.0.10",
-    "rooks": "^7.14.1",
     "styled-components": "^6.1.12",
-    "three": "^0.161.0"
+    "three": "^0.161.0",
+    "tweakpane": "^4.0.4",
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
+    "@tweakpane/core": "^2.0.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
