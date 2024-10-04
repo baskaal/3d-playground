@@ -8,7 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "3oilerplate": "^0.3.5",
+    "3oilerplate": "^3.0.10",
     "@react-three/csg": "^3.2.0",
     "@react-three/drei": "^9.97.5",
     "@react-three/fiber": "^8.15.16",
@@ -24,6 +24,7 @@
     "react-dom": "^18",
     "react-feather": "^2.0.10",
     "rooks": "^7.14.1",
+    "styled-components": "^6.1.12",
     "three": "^0.161.0"
   },
   "devDependencies": {

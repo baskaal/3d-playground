@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Select, Input, Checkbox, Spacer } from '3oilerplate'
 import { Settings as SettingsIcon } from 'react-feather'
 import { SMenu, SMenuCredits, SMenuItem, SMenuToggle } from '@/app/components/Menu/Menu.styled'
@@ -17,11 +19,10 @@ export const Menu = ({ setConfig, config, credits }: any) => (
         value={config.color}
         onChange={(value: string) => setConfig({ ...config, color: value }) }
         options={[
-          { label: 'Red', value: 'red' },
-          { label: 'Green', value: 'green' },
-          { label: 'Gold', value: 'gold' },
-          { label: 'White', value: 'white' },
-          { label: 'Grey', value: 'grey' }
+          { label: 'Crystal', value: '#A69FB8' },
+          { label: 'Red', value: '#FF0303' },
+          { label: 'Green', value: '#499B2B' },
+          { label: 'Gold', value: '#FFE15D' }
         ]}
       />
     </SMenuItem>
@@ -56,7 +57,7 @@ export const Menu = ({ setConfig, config, credits }: any) => (
       <span>Rotate Object</span>
       <Spacer s={{ width: 'auto', flexDirection: 'row' }}>
         <Checkbox
-          isChecked={config.rotateObject}
+          checked={config.rotateObject}
           onChange={(value: boolean) => setConfig({ ...config, rotateObject: value }) }
         />
         <Input
@@ -73,7 +74,7 @@ export const Menu = ({ setConfig, config, credits }: any) => (
       <span>Rotate Scene</span>
       <Spacer s={{ width: 'auto', flexDirection: 'row' }}>
         <Checkbox
-          isChecked={config.rotateScene}
+          checked={config.rotateScene}
           onChange={(value: boolean) => setConfig({ ...config, rotateScene: value }) }
         />
         <Input
@@ -89,21 +90,21 @@ export const Menu = ({ setConfig, config, credits }: any) => (
     <SMenuItem>
       <span>Edges</span>
       <Checkbox
-        isChecked={config.edges}
+        checked={config.edges}
         onChange={(value: boolean) => setConfig({ ...config, edges: value }) }
       />
     </SMenuItem>
     <SMenuItem>
       <span>Lights</span>
       <Checkbox
-        isChecked={config.lights}
+        checked={config.lights}
         onChange={(value: boolean) => setConfig({ ...config, lights: value }) }
       />
     </SMenuItem>
     <SMenuItem>
       <span>Wireframe</span>
       <Checkbox
-        isChecked={config.wireframe}
+        checked={config.wireframe}
         onChange={(value: boolean) => setConfig({ ...config, wireframe: value }) }
       />
     </SMenuItem>
