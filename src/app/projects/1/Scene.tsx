@@ -12,9 +12,9 @@ export const Scene = ({ config }: any) => {
   const objectRef = useRef<any>()
 
   useFrame((state, renderPriority) => {
-    if (!config.rotateObject) return
+    if (!config.objectRotation) return
 
-    objectRef.current.rotation.x += (renderPriority * config.objectRotationSpeed)
+    objectRef.current.rotation.x += (renderPriority * (config.objectRotation / 10))
   })
 
   const getRotation = (amount: number, index: number) => {
@@ -56,8 +56,8 @@ export const Scene = ({ config }: any) => {
       <OrbitControls
         minDistance={config.zoom}
         maxDistance={config.zoom}
-        autoRotate={config.rotateScene}
-        autoRotateSpeed={config.sceneRotationSpeed}
+        autoRotate={!!config.sceneRotation}
+        autoRotateSpeed={config.sceneRotation}
         enableZoom={false}
         enablePan={false}
         target={[0, 0, 0]}

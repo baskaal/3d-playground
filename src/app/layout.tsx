@@ -11,7 +11,7 @@ const DynamicWrapper = dynamic(() => Promise.resolve(({ children }: PropsWithChi
   ssr: false
 })
 
-export const SApp = s.div(() => ({
+const SApp = s.div({
   width: '100%',
   height: '100%',
   minHeight: '100vh',
@@ -19,7 +19,7 @@ export const SApp = s.div(() => ({
   color: 'white',
   fontFamily: 'base',
   fontSize: '.8rem'
-}))
+})
 
 const App = ({ children }: PropsWithChildren) => {
   return (
