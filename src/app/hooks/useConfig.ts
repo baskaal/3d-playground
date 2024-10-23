@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import { FolderApi, Pane } from 'tweakpane'
 import { uniqueId } from 'lodash'
+import { usePathname } from 'next/navigation'
 
 type Setting = {
   type?: 'folder' | 'button' | 'separator'
@@ -67,11 +68,14 @@ const setup = (currentPane: Pane | FolderApi, settings: Settings, config: Config
   })
 }
 
-export const useConfig = (settings: Settings) => {
-  const initialConfig = getConfigValues(settings)
-  const [config, setConfig] = useLocalStorage<Config>('config', { ...initialConfig })
+export const useConfig = (settings?: Settings | null, projectIndex?: number) => {
+  const path = usePathname().split('/')
+  const storageId = `project-${projectIndex || path[path.length - 1]}-config`
+  const initialConfig = getConfigValues(settings || {})
+  const [config, setConfig, removeConfig] = useLocalStorage<Config>(storageId, { ...initialConfig })
 
   const init = (newConfig: Config) => {
+    if (!settings) return
     if (instance) (instance as any).containerElem_.remove()
     instance = new Pane()
     instance.on('change', (event) => {
@@ -85,7 +89,7 @@ export const useConfig = (settings: Settings) => {
   }
 
   const reset = () => {
-    setConfig({ ...initialConfig })
+    removeConfig()
     init({ ...initialConfig })
   }
 
