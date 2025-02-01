@@ -1,5 +1,5 @@
 import { Edges } from '@react-three/drei'
-import { lighten } from '3oilerplate'
+import { lighten } from 'csscomp'
 
 export const Object = ({ shapes, material, rotation, config }: any) => (
   <mesh rotation={[rotation, 0, 0]}>
