@@ -1,14 +1,14 @@
 'use client'
-
 import { Canvas } from '@react-three/fiber'
-import { Box } from '3oilerplate'
 import { Scene } from './Scene'
 import { useConfig, makeSeparator, makeButton, makeFolder } from '@/app/hooks/useConfig'
+import { Box } from '@/app/components/Box'
+import { PROJECTS } from '@/app/constants/projects'
 
 const Page = () => {
   const { config, reset } = useConfig({
     ...makeFolder('config', {
-      color: { value: '#ff0000' },
+      color: { value: PROJECTS[0].color },
       bgColor: { value: '#1c1c1c' },
       amount: { value: 20, min: 5, max: 100, step: 1 },
       offset: { value: 5, min: -100, max: 100, step: 1 },
@@ -22,12 +22,12 @@ const Page = () => {
       wireframe: { value: false },
       ...makeSeparator(),
       ...makeButton('reset', () => reset()),
-      ...makeSeparator(),
+      ...makeSeparator()
     })
   })
 
   return (
-    <Box s={{ width: '100%', div: { mih: '100vh' }, backgroundColor: config?.bgColor }}>
+    <Box css={{ width: '100%', div: { mih: '100vh' }, backgroundColor: config?.bgColor }}>
       <Canvas>
         <Scene config={config} />
       </Canvas>
