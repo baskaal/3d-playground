@@ -1,22 +1,25 @@
 'use client'
-
-import { Button, Spacer } from '3oilerplate'
 import Link from 'next/link'
+import { Box, Button } from './components'
+import { PROJECTS } from './constants/projects'
 
 const Home = () => {
+  const getCurrentColor = (project: any) => {
+    if (typeof window !== 'undefined') {
+      return JSON.parse(window.localStorage.getItem(`project-${project.path}-config`) || '{}')?.color || project.color
+    }
+  }
+
   return (
-    <Spacer size="m" s={{ height: '100%', minHeight: '100vh', justifyContent: 'center', alignItems: 'center' }}>
-      <Link href="/projects/1">
-        <Button>
-          Project 1
-        </Button>
-      </Link>
-      <Link href="/projects/2">
-        <Button>
-          Project 2
-        </Button>
-      </Link>
-    </Spacer>
+    <Box css={{ d: 'flex', fxd: 'column', h: '100%', mih: '100vh', jc: 'center', ai: 'center', '> * + *': { mt: 5 } }}>
+      { PROJECTS.map((project, index) => (
+        <Link href={`/projects/${project.path}`} key={index}>
+          <Button color={getCurrentColor(project)}>
+            { project.label }
+          </Button>
+        </Link>
+      ))}
+    </Box>
   )
 }
 
