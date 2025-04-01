@@ -1,14 +1,29 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
+import { load } from 'opentype.js'
 import { useConfig, makeSeparator, makeButton, makeFolder } from '@/app/hooks/useConfig'
 import { Box } from '@/app/components/Box'
 import { PROJECTS } from '@/app/constants/projects'
 import { Scene } from './Scene'
+import { convertFont, getFontOptions } from './helpers/fonts'
 
 const Page = () => {
+  const [fontOptions, setFontOptions] = useState<any>([])
+  const [fontData, setFontData] = useState<any>(null)
+
+  useEffect(() => {
+    (async () => {
+      setFontOptions(await getFontOptions())
+    })()
+  }, [])
+
   const { config, reset } = useConfig({
     ...makeFolder('config', {
+      ...(fontOptions.length && {
+        fonts: { type: 'options', label: 'font', options: fontOptions, value: fontOptions[0].value }
+      }),
       color: { value: PROJECTS[1].color },
       bgColor: { value: '#1c1c1c' },
       amount: { value: 10, min: 5, max: 100, step: 1 },
@@ -25,6 +40,15 @@ const Page = () => {
     })
   })
 
+  useEffect(() => {
+    if (!config.font) return
+
+    (async () => {
+      const font = await load(config.font as unknown as string)
+      setFontData(convertFont(font))
+    })()
+  }, [config])
+
   return (
     <Box
       css={{
@@ -34,7 +58,7 @@ const Page = () => {
       }}
     >
       <Canvas shadows>
-        <Scene config={config} />
+        <Scene config={config} fontData={fontData} />
       </Canvas>
     </Box>
   )
