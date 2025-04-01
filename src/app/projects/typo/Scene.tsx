@@ -2,11 +2,11 @@
 
 import { useRef } from 'react'
 import { MathUtils } from 'three'
+import { useFrame } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera, Text3D } from '@react-three/drei'
 import { sample, times } from 'lodash'
-import { useFrame } from '@react-three/fiber'
 
-export const Scene = ({ config }: any) => {
+export const Scene = ({ config, fontData }: any) => {
   const objectRef = useRef<any>()
 
   const getRotation = (amount: number, index: number) => {
@@ -14,23 +14,24 @@ export const Scene = ({ config }: any) => {
   }
 
   const getCharacter = () => {
-    return sample(times(100, i => String.fromCharCode(i + 32)))?.toUpperCase()
+    return sample(times(200, i => String.fromCharCode(31 + i).trim()).filter((char) => char))
   }
 
   useFrame((state, renderPriority) => {
-    if (!config.objectRotation) return
+    if (!objectRef.current || !config.objectRotation) return
     objectRef.current.rotation.y += (renderPriority * (config.objectRotation / 10))
   })
 
-  return (
+  return fontData && (
     <group>
       <PerspectiveCamera makeDefault position={[100, 0, 0]}>
-        <ambientLight castShadow />
+        <ambientLight />
         {config.lights && (
           <directionalLight
             position={[0, 800, 1000]}
             shadow-mapSize={[800, 800]}
             intensity={5}
+            castShadow
           />
         )}
       </PerspectiveCamera>
@@ -40,8 +41,8 @@ export const Scene = ({ config }: any) => {
           <mesh rotation={[getRotation(config.amount, i), 0, MathUtils.degToRad(180)]}>
             <Text3D
               rotation={[0, 0, MathUtils.degToRad(90)]}
-              position={[-5, 0, config.offset]}
-              font="/assets/Roboto_Medium_Regular.json"
+              position={[0, 0, config.offset]}
+              font={fontData}
               letterSpacing={0}
               lineHeight={1}
               size={12}

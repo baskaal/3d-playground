@@ -5,13 +5,14 @@ import { uniqueId } from 'lodash'
 import { usePathname } from 'next/navigation'
 
 type Setting = {
-  type?: 'folder' | 'button' | 'separator'
+  type?: 'folder' | 'button' | 'options' | 'separator'
   title?: string
   label?: string
   value?: number | string | boolean
   min?: number
   max?: number
   step?: number
+  options?: { text: string, value: any }[]
   expanded?: boolean
   settings?: { [key: string]: Setting }
   onClick?: Function
@@ -56,6 +57,10 @@ const setup = (currentPane: Pane | FolderApi, settings: Settings, config: Config
       return currentPane.addButton({ title: item.title! }).on('click', item.onClick as any)
     }
 
+    if (item.type === 'options') {
+      return currentPane.addBlade({ view: 'list', label: item.label, options: item.options, value: item.value })
+    }
+
     if (item.type === 'separator') {
       return currentPane.addBlade({ view: 'separator' })
     }
@@ -81,7 +86,7 @@ export const useConfig = (settings?: Settings | null, projectIndex?: number) => 
     instance.on('change', (event) => {
       setConfig((currentConfigValues) => ({
         ...currentConfigValues,
-        [(event.target as any).key]: event.value
+        [(event.target as any).key || (event.target as any).label]: event.value
       }))
     })
 
@@ -95,7 +100,7 @@ export const useConfig = (settings?: Settings | null, projectIndex?: number) => 
 
   useEffect(() => {
     init(config)
-  }, [])
+  }, [settings])
 
   return {
     config,
