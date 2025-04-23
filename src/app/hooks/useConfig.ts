@@ -1,109 +1,61 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import { FolderApi, Pane } from 'tweakpane'
-import { uniqueId } from 'lodash'
+import { mapValues, pickBy, uniqueId } from 'lodash'
 import { usePathname } from 'next/navigation'
 
-type Setting = {
-  type?: 'folder' | 'button' | 'options' | 'separator'
-  title?: string
-  label?: string
-  value?: number | string | boolean
-  min?: number
-  max?: number
-  step?: number
-  options?: { text: string, value: any }[]
-  expanded?: boolean
-  settings?: { [key: string]: Setting }
-  onClick?: Function
-}
-
-type Settings = {
-  [key: string]: Setting
-}
-
-type Config = {
-  [key: string]: { value: number | string | boolean }
-}
-
-let instance: Pane | null = null
-
-const getConfigValues = (settings: Settings): Config => {
-  return Object.entries(settings).reduce((acc, [key, value]) => {
-    return value.type === 'folder' ? getConfigValues(value.settings!) : { ...acc, [key]: value.value }
-  }, {})
-}
-
-export const makeFolder = (title: string, settings: Settings, expanded = false): Settings => {
-  return { [title]: { type: 'folder', title, settings, expanded } }
-}
-
-export const makeButton = (title: string, onClick: Function): Settings => {
+export const makeButton = (title: string, onClick: Function): any => {
   return { [`button-${uniqueId()}`]: { type: 'button', title, onClick } }
 }
 
-export const makeSeparator = (): Settings => {
+export const makeSeparator = (): any => {
   return { [`seperator-${uniqueId()}`]: { type: 'separator' } }
 }
 
-const setup = (currentPane: Pane | FolderApi, settings: Settings, config: Config) => {
-  Object.entries(settings).map(([key, item]) => {
-    if (item.type === 'folder') {
-      const folder = currentPane.addFolder({ title: key, expanded: item.expanded })
-      return setup(folder, item.settings!, config)
-    }
+const add = (pane: FolderApi, item: any) => {
+  const { key, value, ...options } = item
 
-    if (item.type === 'button') {
-      return currentPane.addButton({ title: item.title! }).on('click', item.onClick as any)
-    }
+  if (item.type === 'button') {
+    return pane.addButton({ title: item.title }).on('click', item.onClick)
+  }
 
-    if (item.type === 'options') {
-      return currentPane.addBlade({ view: 'list', label: item.label, options: item.options, value: item.value })
-    }
+  if (item.type === 'separator') {
+    return pane.addBlade({ view: 'separator' })
+  }
 
-    if (item.type === 'separator') {
-      return currentPane.addBlade({ view: 'separator' })
-    }
-
-    if (!config[key]) {
-      config[key] = getConfigValues(settings)[key]
-    }
-
-    return currentPane.addBinding(config, key, { ...item })
-  })
+  return pane.addBinding({ [key]: value }, key, options)
 }
 
-export const useConfig = (settings?: Settings | null, projectIndex?: number) => {
+export const useConfig = (initConfig: any, projectIndex?: number) => {
+  const pane = useRef<Pane | null>(null)
   const path = usePathname().split('/')
   const storageId = `project-${projectIndex || path[path.length - 1]}-config`
-  const initialConfig = getConfigValues(settings || {})
-  const [config, setConfig, removeConfig] = useLocalStorage<Config>(storageId, { ...initialConfig })
+  const initialValues = mapValues(pickBy(initConfig, 'value'), 'value')
+  const [values, setValues, removeValues] = useLocalStorage<any>(storageId, initialValues)
 
-  const init = (newConfig: Config) => {
-    if (!settings) return
-    if (instance) (instance as any).containerElem_.remove()
-    instance = new Pane()
-    instance.on('change', (event) => {
-      setConfig((currentConfigValues) => ({
-        ...currentConfigValues,
-        [(event.target as any).key || (event.target as any).label]: event.value
+  useEffect(() => {
+    if (pane.current) {
+      pane.current.dispose()
+      pane.current = null
+    }
+
+    pane.current = new Pane()
+    pane.current.on('change', (event) => {
+      setValues((currentConfig) => ({
+        ...currentConfig,
+        [event.target.key]: event.value
       }))
     })
 
-    setup(instance, settings, newConfig)
-  }
+    const folder = pane.current.addFolder({ title: 'config', expanded: true })
 
-  const reset = () => {
-    removeConfig()
-    init({ ...initialConfig })
-  }
-
-  useEffect(() => {
-    init(config)
-  }, [settings])
+    Object.entries(initConfig).forEach(([key, item]) => {
+      add(folder, { ...item, key, value: values[key] !== undefined ? values[key] : item.value })
+    })
+  }, [initConfig])
 
   return {
-    config,
-    reset
+    config: values,
+    reset: removeValues
   }
 }

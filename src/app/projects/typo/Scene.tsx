@@ -14,7 +14,7 @@ export const Scene = ({ config, fontData }: any) => {
   }
 
   const getCharacter = () => {
-    return sample(times(200, i => String.fromCharCode(31 + i).trim()).filter((char) => char))
+    return sample(times(256, i => String.fromCharCode(31 + i).trim()).filter((char) => char))
   }
 
   useFrame((state, renderPriority) => {

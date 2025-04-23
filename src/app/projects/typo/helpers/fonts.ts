@@ -2,14 +2,10 @@ import axios from 'axios'
 
 export const getFontOptions = async () => {
   const res = await axios(`https://www.googleapis.com/webfonts/v1/webfonts?key=${process.env.NEXT_PUBLIC_GOOGLE_FONTS_TOKEN}`)
-  const options = res.data.items?.reduce((acc, { family, files }: any) => {
-    return [
-      ...acc,
-      ...Object.entries(files)
-        .filter(([key]) => key.includes('regular'))
-        .map(([key, value]) => ({ text: `${family} ${key}`, value }))
-    ]
-  }, [])
+  const options = res.data.items?.reduce((acc, { family, files }: any) => ({
+    ...acc,
+    [family]: files
+  }), {})
 
   return options || []
 }
@@ -34,7 +30,6 @@ export const convertFont = (font: any) => {
     },
     resolution: 1000,
     original_font_information: font.tables.name
-
   }
 
   Object.values(font.glyphs.glyphs).forEach((glyph) => {
