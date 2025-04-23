@@ -3,22 +3,21 @@
 import { useRef } from 'react'
 import { MathUtils } from 'three'
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls, PerspectiveCamera, Text3D } from '@react-three/drei'
-import { sample, times } from 'lodash'
+import { Center, OrbitControls, PerspectiveCamera, Text3D } from '@react-three/drei'
+import { random, sample, times } from 'lodash'
 
 export const Scene = ({ config, fontData }: any) => {
   const objectRef = useRef<any>()
 
-  const getRotation = (amount: number, index: number) => {
-    return ((360 / amount) * index) * (Math.PI / 180)
-  }
-
-  const getCharacter = () => {
-    return sample(times(256, i => String.fromCharCode(31 + i).trim()).filter((char) => char))
+  const getCharacter = (index: number): string => {
+    const characters = config.characters?.split('') || []
+    const character = config.shuffleCharacters ? sample(characters) : characters[index % characters.length]
+    return config.characters ? character : String.fromCharCode(random(32, 150))
   }
 
   useFrame((state, renderPriority) => {
     if (!objectRef.current || !config.objectRotation) return
+
     objectRef.current.rotation.y += (renderPriority * (config.objectRotation / 10))
   })
 
@@ -36,33 +35,43 @@ export const Scene = ({ config, fontData }: any) => {
         )}
       </PerspectiveCamera>
 
-      <group scale={0.2} ref={objectRef} position={[0, config.posY, 0]} rotation={[0, 0, MathUtils.degToRad(90)]}>
+      <group
+        scale={0.1}
+        ref={objectRef}
+        position={[0, -5 + (config.posY || 0), 0]}
+        rotation={[0, 0, MathUtils.degToRad(90)]}
+      >
         { times(config.amount, (i) => (
-          <mesh rotation={[getRotation(config.amount, i), 0, MathUtils.degToRad(180)]}>
-            <Text3D
+          <mesh rotation={[MathUtils.degToRad((360 / config.amount) * i), 0, MathUtils.degToRad(180)]}>
+            <Center
               rotation={[0, 0, MathUtils.degToRad(90)]}
-              position={[0, 0, config.offset]}
-              font={fontData}
-              letterSpacing={0}
-              lineHeight={1}
-              size={12}
-              height={4}
-              bevelEnabled={true}
-              bevelThickness={0.5}
-              bevelSize={0.5}
-              bevelOffset={0}
-              bevelSegments={10}
-              curveSegments={10}
-              smooth={0}
-              castShadow
-              receiveShadow
+              position={[0, -(config.offset || 0), 0]}
+              disableY
             >
-              { getCharacter() }
-              <meshPhongMaterial
-                color={config.color}
-                shininess={500}
-              />
-            </Text3D>
+              <Text3D
+                rotation={[0, MathUtils.degToRad(-90), 0]}
+                font={fontData}
+                letterSpacing={0}
+                lineHeight={1}
+                size={config.size}
+                height={4}
+                bevelEnabled={true}
+                bevelThickness={config.bevelThickness / 100}
+                bevelSize={config.bevelSize / 100}
+                bevelOffset={config.bevelOffset / 100}
+                bevelSegments={config.bevelSegments / 100}
+                curveSegments={config.curveSegments}
+                smooth={0}
+                castShadow
+                receiveShadow
+              >
+                { getCharacter(i) }
+                <meshPhongMaterial
+                  color={config.color}
+                  shininess={500}
+                />
+              </Text3D>
+            </Center>
           </mesh>
         )) }
       </group>

@@ -13,6 +13,7 @@ export const LocalStyle = css({
   },
 
   '.tp-dfwv': {
-    zIndex: 1000
+    zIndex: 1000,
+    width: '300px !important'
   }
 })
