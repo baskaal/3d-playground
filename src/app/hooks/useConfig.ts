@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import { FolderApi, Pane } from 'tweakpane'
-import { mapValues, pickBy, uniqueId } from 'lodash'
+import { debounce, isEmpty, mapValues, pickBy, uniqueId } from 'lodash'
 import { usePathname } from 'next/navigation'
 
 export const makeButton = (title: string, onClick: Function): any => {
@@ -26,36 +26,46 @@ const add = (pane: FolderApi, item: any) => {
   return pane.addBinding({ [key]: value }, key, options)
 }
 
+const getValues = (config: any) => {
+  return mapValues(pickBy(config, 'value'), 'value')
+}
+
 export const useConfig = (initConfig: any, projectIndex?: number) => {
   const pane = useRef<Pane | null>(null)
   const path = usePathname().split('/')
   const storageId = `project-${projectIndex || path[path.length - 1]}-config`
-  const initialValues = mapValues(pickBy(initConfig, 'value'), 'value')
-  const [values, setValues, removeValues] = useLocalStorage<any>(storageId, initialValues)
+  const [values, setValues] = useLocalStorage<any>(storageId, {})
 
   useEffect(() => {
+    if (isEmpty(values)) {
+      setValues(getValues(initConfig))
+      return
+    }
+
     if (pane.current) {
       pane.current.dispose()
       pane.current = null
     }
 
-    pane.current = new Pane()
-    pane.current.on('change', (event) => {
+    const debouncedSetValues = debounce((event: any) => {
       setValues((currentConfig) => ({
         ...currentConfig,
         [event.target.key]: event.value
       }))
-    })
+    }, 500)
+
+    pane.current = new Pane()
+    pane.current.on('change', debouncedSetValues)
 
     const folder = pane.current.addFolder({ title: 'config', expanded: true })
 
     Object.entries(initConfig).forEach(([key, item]) => {
       add(folder, { ...item, key, value: values[key] !== undefined ? values[key] : item.value })
     })
-  }, [initConfig])
+  }, [initConfig, values])
 
   return {
     config: values,
-    reset: removeValues
+    reset: () => setValues(getValues(initConfig))
   }
 }
