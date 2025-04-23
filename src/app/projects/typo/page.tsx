@@ -11,7 +11,7 @@ import { Scene } from './Scene'
 import { convertFont, getFontOptions } from './helpers/fonts'
 
 const Page = () => {
-  const [fonts, setFonts] = useState<any>(null)
+  const [fonts, setFonts] = useState<{ [key: string]: string } | null>(null)
   const [fontVariants, setFontVariants] = useState<any>(null)
   const [fontData, setFontData] = useState<any>(null)
 
@@ -22,20 +22,30 @@ const Page = () => {
   }, [])
 
   const { config, reset } = useConfig({
+    characters: { value: '' },
+    shuffleCharacters: { value: false },
+    ...makeSeparator(),
     ...(fontFamilies && {
-      fontFamily: { value: Object.values(fontFamilies)[0] || '', options: fontFamilies }
+      fontFamily: { value: 'DM Serif Display', options: fontFamilies }
     }),
     ...(fontVariants && {
       fontVariant: { value: Object.values(fontVariants)[0], options: fontVariants }
     }),
     color: { value: PROJECTS[1].color },
     bgColor: { value: '#1c1c1c' },
-    amount: { value: 10, min: 5, max: 100, step: 1 },
-    offset: { value: 25, min: -100, max: 100, step: 1 },
-    posY: { value: -5, min: -50, max: 50, step: 1 },
+    amount: { value: 5, min: 5, max: 100, step: 1 },
+    size: { value: 25, min: 5, max: 100, step: 1 },
+    offset: { value: 30, min: 0, max: 100, step: 1 },
+    posY: { value: 0, min: -50, max: 50, step: 1 },
+    ...makeSeparator(),
+    bevelThickness: { value: 50, min: 0, max: 100, step: 1 },
+    bevelSize: { value: 50, min: 0, max: 100, step: 1 },
+    bevelOffset: { value: 25, min: 0, max: 100, step: 1 },
+    bevelSegments: { value: 100, min: 0, max: 100, step: 1 },
+    curveSegments: { value: 100, min: 0, max: 100, step: 1 },
     ...makeSeparator(),
     objectRotation: { label: 'object ⟳', value: 5, min: -100, max: 100, step: 1 },
-    zoom: { value: 50, min: 1, max: 500, step: 10 },
+    zoom: { value: 25, min: 1, max: 500, step: 5 },
     ...makeSeparator(),
     lights: { value: true },
     wireframe: { value: true },
@@ -43,20 +53,23 @@ const Page = () => {
     ...makeButton('reset', () => reset())
   })
 
+  const getFontData = async (fontVariant: string) => {
+    const font = await load(fontVariant)
+    setFontData(convertFont(font))
+  }
+
   useEffect(() => {
     if (!fonts) return
     if (!config.fontFamily) return
 
     setFontVariants(fonts[config.fontFamily])
+    getFontData(Object.values(fonts[config.fontFamily])[0])
   }, [fonts, config?.fontFamily])
 
   useEffect(() => {
     if (!config.fontVariant) return
 
-    (async () => {
-      const font = await load(config.fontVariant)
-      setFontData(convertFont(font))
-    })()
+    getFontData(config.fontVariant)
   }, [config?.fontVariant])
 
   return (
