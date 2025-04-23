@@ -10,5 +10,9 @@ export const LocalStyle = css({
 
   "*[class^='tp-']": {
     ff: 'inherit !important'
+  },
+
+  '.tp-dfwv': {
+    zIndex: 1000
   }
 })
