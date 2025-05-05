@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import { FolderApi, Pane } from 'tweakpane'
 import { debounce, isEmpty, mapValues, pickBy, uniqueId } from 'lodash'
@@ -36,6 +36,7 @@ const getValues = (config: any) => {
 
 export const useConfig = (initConfig: any, projectIndex?: number) => {
   const pane = useRef<Pane | null>(null)
+  const [isExpanded, setIsExpanded] = useState(false)
   const path = usePathname().split('/')
   const storageId = `project-${projectIndex || path[path.length - 1]}-config`
   const [values, setValues] = useLocalStorage<any>(storageId, {})
@@ -51,6 +52,7 @@ export const useConfig = (initConfig: any, projectIndex?: number) => {
     }
 
     const debouncedSetValues = debounce((event: any) => {
+      setIsExpanded(true)
       setValues((currentConfig) => ({
         ...currentConfig,
         [event.target.key || event.target.label]: event.value
@@ -60,7 +62,7 @@ export const useConfig = (initConfig: any, projectIndex?: number) => {
     pane.current = new Pane()
     pane.current.on('change', debouncedSetValues)
 
-    const folder = pane.current.addFolder({ title: 'config', expanded: true })
+    const folder = pane.current.addFolder({ title: 'config', expanded: isExpanded })
 
     Object.entries(initConfig).forEach(([key, item]) => {
       add(
