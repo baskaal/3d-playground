@@ -12,8 +12,8 @@ export const makeSeparator = (): any => {
   return { [`seperator-${uniqueId()}`]: { type: 'separator' } }
 }
 
-const add = (pane: FolderApi, item: any) => {
-  const { key, value, ...options } = item
+const add = (pane: FolderApi, item: any, values: any) => {
+  const { key, value, dependsOn, ...options } = item
 
   if (item.type === 'button') {
     return pane.addButton({ title: item.title }).on('click', item.onClick)
@@ -21,6 +21,10 @@ const add = (pane: FolderApi, item: any) => {
 
   if (item.type === 'separator') {
     return pane.addBlade({ view: 'separator' })
+  }
+
+  if (dependsOn && !values[dependsOn]) {
+    return
   }
 
   return pane.addBinding({ [key]: value }, key, options)
@@ -38,8 +42,7 @@ export const useConfig = (initConfig: any, projectIndex?: number) => {
 
   useEffect(() => {
     if (isEmpty(values)) {
-      setValues(getValues(initConfig))
-      return
+      return setValues(getValues(initConfig))
     }
 
     if (pane.current) {
@@ -50,7 +53,7 @@ export const useConfig = (initConfig: any, projectIndex?: number) => {
     const debouncedSetValues = debounce((event: any) => {
       setValues((currentConfig) => ({
         ...currentConfig,
-        [event.target.key]: event.value
+        [event.target.key || event.target.label]: event.value
       }))
     }, 500)
 
@@ -60,7 +63,11 @@ export const useConfig = (initConfig: any, projectIndex?: number) => {
     const folder = pane.current.addFolder({ title: 'config', expanded: true })
 
     Object.entries(initConfig).forEach(([key, item]) => {
-      add(folder, { ...item, key, value: values[key] !== undefined ? values[key] : item.value })
+      add(
+        folder,
+        { ...item, key, value: values[key] !== undefined ? values[key] : item.value },
+        values
+      )
     })
   }, [initConfig, values])
 

@@ -22,8 +22,8 @@ const Page = () => {
   }, [])
 
   const { config, reset } = useConfig({
-    characters: { value: '' },
-    shuffleCharacters: { value: false },
+    characters: { type: 'text', value: 'Paula' },
+    shuffleCharacters: { value: false, dependsOn: 'characters' },
     ...makeSeparator(),
     ...(fontFamilies && {
       fontFamily: { value: 'DM Serif Display', options: fontFamilies }
@@ -34,7 +34,7 @@ const Page = () => {
     color: { value: PROJECTS[1].color },
     bgColor: { value: '#1c1c1c' },
     amount: { value: 5, min: 5, max: 100, step: 1 },
-    size: { value: 25, min: 5, max: 100, step: 1 },
+    size: { value: 40, min: 5, max: 100, step: 1 },
     offset: { value: 30, min: 0, max: 100, step: 1 },
     posY: { value: 0, min: -50, max: 50, step: 1 },
     ...makeSeparator(),

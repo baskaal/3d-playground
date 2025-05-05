@@ -10,7 +10,7 @@ const Page = () => {
   const { config, reset } = useConfig({
     color: { value: PROJECTS[0].color },
     bgColor: { value: '#1c1c1c' },
-    amount: { value: 20, min: 5, max: 100, step: 1 },
+    amount: { value: 25, min: 5, max: 100, step: 1 },
     offset: { value: 5, min: -100, max: 100, step: 1 },
     ...makeSeparator(),
     objectRotation: { label: 'object ⟳', value: 5, min: -100, max: 100, step: 1 },
@@ -21,7 +21,9 @@ const Page = () => {
     edges: { value: true },
     wireframe: { value: false },
     ...makeSeparator(),
-    ...makeButton('reset', () => reset())
+    ...makeButton('reset', () => reset()),
+    ...makeSeparator(),
+
   })
 
   return (
