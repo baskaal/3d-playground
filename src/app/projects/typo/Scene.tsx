@@ -10,14 +10,14 @@ export const Scene = ({ config, fontData }: any) => {
   const objectRef = useRef<any>()
 
   const getCharacter = (index: number): string => {
-    const characters = config.characters?.split('') || []
-    const character = config.shuffleCharacters ? sample(characters) : characters[index % characters.length]
-    return config.characters ? character : String.fromCharCode(random(32, 150))
+    const splitChars = config.characters?.split('') || []
+    if (!splitChars.length) return String.fromCharCode(random(32, 127))
+    if (config.shuffleCharacters) return sample(splitChars)
+    return splitChars[index % splitChars.length]
   }
 
   useFrame((state, renderPriority) => {
     if (!objectRef.current || !config.objectRotation) return
-
     objectRef.current.rotation.y += (renderPriority * (config.objectRotation / 10))
   })
 
