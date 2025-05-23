@@ -26,10 +26,14 @@ const Page = () => {
     shuffleCharacters: { value: false, dependsOn: 'characters' },
     ...makeSeparator(),
     ...(fontFamilies && {
-      fontFamily: { value: 'DM Serif Display', options: fontFamilies }
+      fontFamily: { value: 'PT Serif', options: fontFamilies }
     }),
     ...(fontVariants && {
-      fontVariant: { value: Object.values(fontVariants)[0], options: fontVariants }
+      fontVariant: {
+        value: fontVariants['500'],
+        options: fontVariants,
+        dependsOn: 'fontFamily'
+      }
     }),
     color: { value: PROJECTS[1].color },
     bgColor: { value: '#1c1c1c' },
@@ -44,7 +48,13 @@ const Page = () => {
     bevelSegments: { value: 100, min: 0, max: 100, step: 1 },
     curveSegments: { value: 100, min: 0, max: 100, step: 1 },
     ...makeSeparator(),
-    objectRotation: { label: 'object ⟳', value: 5, min: -100, max: 100, step: 1 },
+    objectRotation: {
+      label: 'object ⟳',
+      value: 5,
+      min: -100,
+      max: 100,
+      step: 1
+    },
     zoom: { value: 25, min: 1, max: 500, step: 5 },
     ...makeSeparator(),
     lights: { value: true },
@@ -63,7 +73,6 @@ const Page = () => {
     if (!config.fontFamily) return
 
     setFontVariants(fonts[config.fontFamily])
-    getFontData(Object.values(fonts[config.fontFamily])[0])
   }, [fonts, config?.fontFamily])
 
   useEffect(() => {
