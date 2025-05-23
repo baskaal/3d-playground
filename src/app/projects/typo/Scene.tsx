@@ -51,16 +51,13 @@ export const Scene = ({ config, fontData }: any) => {
               <Text3D
                 rotation={[0, MathUtils.degToRad(-90), 0]}
                 font={fontData}
-                letterSpacing={0}
-                lineHeight={1}
                 size={config.size}
-                height={4}
+                height={config.depth}
                 bevelEnabled={true}
-                bevelThickness={config.bevelThickness / 100}
-                bevelSize={config.bevelSize / 100}
-                bevelOffset={config.bevelOffset / 100}
-                bevelSegments={config.bevelSegments / 100}
-                curveSegments={config.curveSegments}
+                bevelSize={config.bevelSize / 25}
+                bevelThickness={config.bevelThickness / 25}
+                bevelSegments={config.bevelSegments / 5}
+                curveSegments={config.curveSegments / 5}
                 smooth={0}
                 castShadow
                 receiveShadow
