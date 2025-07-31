@@ -23,7 +23,7 @@ const Page = () => {
     ...makeSeparator(),
     ...makeButton('reset', () => reset()),
     ...makeSeparator(),
-
+    
   })
 
   return (
