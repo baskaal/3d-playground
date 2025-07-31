@@ -56,8 +56,8 @@ export const Scene = ({ config, fontData }: any) => {
                 bevelEnabled={true}
                 bevelSize={config.bevelSize / 25}
                 bevelThickness={config.bevelThickness / 25}
-                bevelSegments={config.bevelSegments / 5}
-                curveSegments={config.curveSegments / 5}
+                bevelSegments={config.bevelSegments}
+                curveSegments={config.curveSegments}
                 smooth={0}
                 castShadow
                 receiveShadow
