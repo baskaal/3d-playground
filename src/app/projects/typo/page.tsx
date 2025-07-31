@@ -44,10 +44,9 @@ const Page = () => {
     posY: { value: 0, min: -50, max: 50, step: 1 },
     ...makeSeparator(),
     bevelSize: { value: 25, min: 0, max: 100, step: 1 },
-    bevelThickness: { value: 25, min: 0, max: 100, step: 1 },
-    bevelOffset: { value: 25, min: 0, max: 100, step: 1 },
-    bevelSegments: { value: 100, min: 0, max: 100, step: 1 },
-    curveSegments: { value: 100, min: 0, max: 100, step: 1 },
+    bevelThickness: { value: 50, min: 0, max: 100, step: 1 },
+    bevelSegments: { value: 5, min: 1, max: 25, step: 1 },
+    curveSegments: { value: 25, min: 1, max: 25, step: 1 },
     ...makeSeparator(),
     objectRotation: {
       label: 'object ⟳',
