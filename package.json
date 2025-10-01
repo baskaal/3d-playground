@@ -14,7 +14,7 @@
     "@react-three/drei": "^9.97.5",
     "@react-three/fiber": "^8.15.16",
     "axios": "^1.8.4",
-    "csscomp": "^1.12.5",
+    "csscomp": "^4.0.4",
     "eslint-config-eslint": "^11.0.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",

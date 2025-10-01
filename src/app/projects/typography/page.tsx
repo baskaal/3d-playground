@@ -26,7 +26,7 @@ const Page = () => {
     shuffleCharacters: { value: false, dependsOn: 'characters' },
     ...makeSeparator(),
     ...(fontFamilies && {
-      fontFamily: { value: 'PT Serif', options: fontFamilies }
+      fontFamily: { value: 'Archivo', options: fontFamilies }
     }),
     ...(fontVariants && {
       fontVariant: {
