@@ -1,4 +1,5 @@
 'use client'
+
 import { comp } from 'csscomp'
 
 export const Button = comp.button(({ color }) => ({

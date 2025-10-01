@@ -1,4 +1,5 @@
 'use client'
+
 import Link from 'next/link'
 import { Box, Button } from './components'
 import { PROJECTS } from './constants/projects'

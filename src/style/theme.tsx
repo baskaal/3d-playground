@@ -5,7 +5,7 @@ const white = darken('#fff', 5)
 
 export const Theme = {
   fonts: {
-    base: 'Merriweather'
+    base: 'Courier'
   },
   rootFontSizes: ['10px', '16px'],
   colors: {
