@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
 import { FolderApi, Pane } from 'tweakpane'
-import { debounce, isEmpty, mapValues, pickBy, uniqueId } from 'lodash'
+import { debounce, mapValues, pickBy, uniqueId } from 'lodash'
 import { usePathname } from 'next/navigation'
+import { useLocalStorage } from 'usehooks-ts'
 
 export const makeButton = (title: string, onClick: Function): any => {
   return { [`button-${uniqueId()}`]: { type: 'button', title, onClick } }
@@ -13,7 +13,7 @@ export const makeSeparator = (): any => {
 }
 
 const add = (pane: FolderApi, item: any, values: any) => {
-  const { key, value, dependsOn, ...options } = item
+  const { key, value, ...options } = item
 
   if (item.type === 'button') {
     return pane.addButton({ title: item.title }).on('click', item.onClick)
@@ -23,29 +23,21 @@ const add = (pane: FolderApi, item: any, values: any) => {
     return pane.addBlade({ view: 'separator' })
   }
 
-  if (dependsOn && !values[dependsOn]) {
-    return
-  }
-
   return pane.addBinding({ [key]: value }, key, options)
 }
 
-const getValues = (config: any) => {
+const getSettings = (config: any) => {
   return mapValues(pickBy(config, 'value'), 'value')
 }
 
-export const useConfig = (initConfig: any, projectIndex?: number) => {
+export const useConfig = (config: any, projectIndex?: number) => {
   const pane = useRef<Pane | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const path = usePathname().split('/')
-  const storageId = `project-${projectIndex || path[path.length - 1]}-config`
-  const [values, setValues] = useLocalStorage<any>(storageId, {})
+  const storageId = `project-${projectIndex || path[path.length - 1]}-settings`
+  const [settings, setSettings, removeSettings] = useLocalStorage<any>(storageId, null)
 
   useEffect(() => {
-    if (isEmpty(values)) {
-      return setValues(getValues(initConfig))
-    }
-
     if (pane.current) {
       pane.current.dispose()
       pane.current = null
@@ -53,8 +45,9 @@ export const useConfig = (initConfig: any, projectIndex?: number) => {
 
     const debouncedSetValues = debounce((event: any) => {
       setIsExpanded(true)
-      setValues((currentConfig) => ({
-        ...currentConfig,
+      setSettings((currentSettings) => ({
+        ...getSettings(config),
+        ...currentSettings,
         [event.target.key || event.target.label]: event.value
       }))
     }, 500)
@@ -62,19 +55,16 @@ export const useConfig = (initConfig: any, projectIndex?: number) => {
     pane.current = new Pane()
     pane.current.on('change', debouncedSetValues)
 
-    const folder = pane.current.addFolder({ title: 'config', expanded: isExpanded })
+    const folder = pane.current.addFolder({ title: 'settings', expanded: isExpanded })
+    folder.on('fold', ({ expanded }) => setIsExpanded(expanded))
 
-    Object.entries(initConfig).forEach(([key, item]) => {
-      add(
-        folder,
-        { ...item, key, value: values[key] !== undefined ? values[key] : item.value },
-        values
-      )
+    Object.entries(config).forEach(([key, item]) => {
+      add(folder, { ...item, key, value: settings?.[key] ?? item.value }, settings)
     })
-  }, [initConfig, values])
+  }, [config])
 
   return {
-    config: values,
-    reset: () => setValues(getValues(initConfig))
+    settings: settings || getSettings(config),
+    reset: removeSettings
   }
 }

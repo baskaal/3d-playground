@@ -1,19 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useReducer } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { load } from 'opentype.js'
 import { mapValues } from 'lodash'
 import { useConfig, makeSeparator, makeButton } from '@/app/hooks/useConfig'
 import { Box } from '@/app/components/Box'
-import { PROJECTS } from '@/app/constants/projects'
 import { Scene } from './Scene'
 import { convertFont, getFontOptions } from './helpers/fonts'
+import randomColor from 'randomcolor'
 
 const Page = () => {
   const [fonts, setFonts] = useState<{ [key: string]: string } | null>(null)
   const [fontVariants, setFontVariants] = useState<any>(null)
   const [fontData, setFontData] = useState<any>(null)
+  const [color, refreshColor] = useReducer(() => randomColor(), randomColor())
 
   const fontFamilies = mapValues(fonts, (value, key) => key)
 
@@ -21,21 +22,16 @@ const Page = () => {
     (async () => { setFonts(await getFontOptions()) })()
   }, [])
 
-  const { config, reset } = useConfig({
+  const { settings, reset } = useConfig({
     characters: { type: 'text', value: 'Paula' },
-    shuffleCharacters: { value: false, dependsOn: 'characters' },
     ...makeSeparator(),
     ...(fontFamilies && {
       fontFamily: { value: 'Archivo', options: fontFamilies }
     }),
     ...(fontVariants && {
-      fontVariant: {
-        value: fontVariants['500'],
-        options: fontVariants,
-        dependsOn: 'fontFamily'
-      }
+      fontVariant: { value: fontVariants['500'], options: fontVariants }
     }),
-    color: { value: PROJECTS[1].color },
+    color: { value: color },
     bgColor: { value: '#1c1c1c' },
     amount: { value: 5, min: 5, max: 100, step: 1 },
     size: { value: 40, min: 5, max: 100, step: 1 },
@@ -60,7 +56,10 @@ const Page = () => {
     lights: { value: true },
     wireframe: { value: true },
     ...makeSeparator(),
-    ...makeButton('reset', () => reset())
+    ...makeButton('reset', () => {
+      reset()
+      refreshColor()
+    })
   })
 
   const getFontData = async (fontVariant: string) => {
@@ -70,27 +69,27 @@ const Page = () => {
 
   useEffect(() => {
     if (!fonts) return
-    if (!config.fontFamily) return
+    if (!settings.fontFamily) return
 
-    setFontVariants(fonts[config.fontFamily])
-  }, [fonts, config?.fontFamily])
+    setFontVariants(fonts[settings.fontFamily])
+  }, [fonts, settings?.fontFamily])
 
   useEffect(() => {
-    if (!config.fontVariant) return
+    if (!settings.fontVariant) return
 
-    getFontData(config.fontVariant)
-  }, [config?.fontVariant])
+    getFontData(settings.fontVariant)
+  }, [settings?.fontVariant])
 
   return (
     <Box
       css={{
         width: '100%',
         div: { mih: '100vh' },
-        backgroundColor: config?.bgColor
+        backgroundColor: settings?.bgColor
       }}
     >
       <Canvas shadows>
-        <Scene config={config} fontData={fontData} />
+        <Scene settings={settings} fontData={fontData} />
       </Canvas>
     </Box>
   )

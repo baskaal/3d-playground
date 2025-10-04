@@ -3,12 +3,15 @@
 import { Canvas } from '@react-three/fiber'
 import { useConfig, makeSeparator, makeButton } from '@/app/hooks/useConfig'
 import { Box } from '@/app/components/Box'
-import { PROJECTS } from '@/app/constants/projects'
 import { Scene } from './Scene'
+import { useReducer } from 'react'
+import randomColor from 'randomcolor'
 
 const Page = () => {
-  const { config, reset } = useConfig({
-    color: { value: PROJECTS[0].color },
+  const [color, refreshColor] = useReducer(() => randomColor(), randomColor())
+
+  const { settings, reset } = useConfig({
+    color: { value: color },
     bgColor: { value: '#1c1c1c' },
     amount: { value: 25, min: 5, max: 100, step: 1 },
     offset: { value: 5, min: -100, max: 100, step: 1 },
@@ -21,7 +24,10 @@ const Page = () => {
     edges: { value: true },
     wireframe: { value: false },
     ...makeSeparator(),
-    ...makeButton('reset', () => reset()),
+    ...makeButton('reset', () => {
+      reset()
+      refreshColor()
+    }),
     ...makeSeparator(),
     
   })
@@ -30,10 +36,10 @@ const Page = () => {
     <Box css={{
       width: '100%',
       div: { mih: '100vh' },
-      backgroundColor: config?.bgColor
+      backgroundColor: settings?.bgColor
     }}>
       <Canvas>
-        <Scene config={config} />
+        <Scene settings={settings} />
       </Canvas>
     </Box>
   )

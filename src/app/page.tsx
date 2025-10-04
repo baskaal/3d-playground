@@ -7,7 +7,7 @@ import { PROJECTS } from './constants/projects'
 const Home = () => {
   const getCurrentColor = (project: any) => {
     if (typeof window !== 'undefined') {
-      return JSON.parse(window.localStorage.getItem(`project-${project.path}-config`) || '{}')?.color || project.color
+      return JSON.parse(window.localStorage.getItem(`project-${project.path}-settings`) || '{}')?.color
     }
   }
 
