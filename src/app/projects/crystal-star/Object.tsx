@@ -1,7 +1,7 @@
 import { Edges } from '@react-three/drei'
 import { lighten } from 'csscomp'
 
-export const Object = ({ shapes, material, rotation, config }: any) => (
+export const Object = ({ shapes, material, rotation, settings }: any) => (
   <mesh rotation={[rotation, 0, 0]}>
     { shapes.map(({ geometry, position, rotation }: any, index: number) => (
       <mesh
@@ -11,7 +11,7 @@ export const Object = ({ shapes, material, rotation, config }: any) => (
         material={material}
         key={`mesh-${index}`}
       >
-        { config.edges && <Edges color={lighten(config.color, 0.5)} /> }
+        { settings.edges && <Edges color={lighten(settings.color, 0.5)} /> }
       </mesh>
     )) }
   </mesh>

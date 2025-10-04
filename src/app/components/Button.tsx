@@ -2,7 +2,7 @@
 
 import { comp } from 'csscomp'
 
-export const Button = comp.button(({ color }) => ({
+export const Button = comp.button<{ color?: string }>(({ color = '#B5B5B5' }) => ({
   py: 2,
   px: 4,
   bgc: 'transparent',
