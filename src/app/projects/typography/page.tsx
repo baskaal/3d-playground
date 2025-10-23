@@ -1,14 +1,13 @@
 'use client'
 
 import { useEffect, useState, useReducer } from 'react'
-import { Canvas } from '@react-three/fiber'
 import { load } from 'opentype.js'
-import { mapValues } from 'lodash'
-import { useConfig, makeSeparator, makeButton } from '@/app/hooks/useConfig'
-import { Box } from '@/app/components/Box'
-import { Scene } from './Scene'
-import { convertFont, getFontOptions } from './helpers/fonts'
 import randomColor from 'randomcolor'
+import { mapValues } from 'lodash'
+import { Canvas } from '@/app/components'
+import { useConfig, makeSeparator, makeButton } from '@/app/hooks/useConfig'
+import { convertFont, getFontOptions } from './helpers/fonts'
+import { Scene } from './Scene'
 
 const Page = () => {
   const [fonts, setFonts] = useState<{ [key: string]: string } | null>(null)
@@ -18,11 +17,7 @@ const Page = () => {
 
   const fontFamilies = mapValues(fonts, (value, key) => key)
 
-  useEffect(() => {
-    (async () => { setFonts(await getFontOptions()) })()
-  }, [])
-
-  const { settings, reset } = useConfig({
+  const { settings, reset, destroy } = useConfig({
     characters: { type: 'text', value: 'Paula' },
     ...makeSeparator(),
     ...(fontFamilies && {
@@ -51,10 +46,9 @@ const Page = () => {
       max: 100,
       step: 1
     },
-    zoom: { value: 25, min: 1, max: 500, step: 5 },
+    zoom: { value: 250, min: 1, max: 500, step: 5 },
     ...makeSeparator(),
     lights: { value: true },
-    wireframe: { value: true },
     ...makeSeparator(),
     ...makeButton('reset', () => {
       reset()
@@ -62,10 +56,14 @@ const Page = () => {
     })
   })
 
-  const getFontData = async (fontVariant: string) => {
-    const font = await load(fontVariant)
-    setFontData(convertFont(font))
-  }
+  useEffect(() => {
+    (async () => {
+      const fontOptions = await getFontOptions()
+      setFonts(fontOptions)
+    })()
+
+    return destroy
+  }, [])
 
   useEffect(() => {
     if (!fonts) return
@@ -77,21 +75,16 @@ const Page = () => {
   useEffect(() => {
     if (!settings.fontVariant) return
 
-    getFontData(settings.fontVariant)
+    (async () => {
+      const font = await load(settings.fontVariant)
+      setFontData(convertFont(font))
+    })()
   }, [settings?.fontVariant])
 
   return (
-    <Box
-      css={{
-        width: '100%',
-        div: { mih: '100vh' },
-        backgroundColor: settings?.bgColor
-      }}
-    >
-      <Canvas shadows>
-        <Scene settings={settings} fontData={fontData} />
-      </Canvas>
-    </Box>
+    <Canvas settings={settings}>
+      <Scene settings={settings} fontData={fontData} />
+    </Canvas>
   )
 }
 

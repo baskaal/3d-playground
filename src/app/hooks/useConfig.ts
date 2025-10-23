@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { FolderApi, Pane } from 'tweakpane'
 import { debounce, mapValues, pickBy, uniqueId } from 'lodash'
 import { usePathname } from 'next/navigation'
@@ -30,21 +30,16 @@ const getSettings = (config: any) => {
   return mapValues(pickBy(config, 'value'), 'value')
 }
 
-export const useConfig = (config: any, projectIndex?: number) => {
+export const useConfig = (config: any) => {
   const pane = useRef<Pane | null>(null)
-  const [isExpanded, setIsExpanded] = useState(false)
-  const path = usePathname().split('/')
-  const storageId = `project-${projectIndex || path[path.length - 1]}-settings`
+  const path = usePathname().replace(/^.*\//, '')
+  const storageId = `project-${path}-settings`
   const [settings, setSettings, removeSettings] = useLocalStorage<any>(storageId, null)
 
   useEffect(() => {
-    if (pane.current) {
-      pane.current.dispose()
-      pane.current = null
-    }
+    destroy()
 
     const debouncedSetValues = debounce((event: any) => {
-      setIsExpanded(true)
       setSettings((currentSettings) => ({
         ...getSettings(config),
         ...currentSettings,
@@ -55,16 +50,23 @@ export const useConfig = (config: any, projectIndex?: number) => {
     pane.current = new Pane()
     pane.current.on('change', debouncedSetValues)
 
-    const folder = pane.current.addFolder({ title: 'settings', expanded: isExpanded })
-    folder.on('fold', ({ expanded }) => setIsExpanded(expanded))
+    const folder = pane.current.addFolder({ title: 'settings', expanded: true })
 
     Object.entries(config).forEach(([key, item]) => {
       add(folder, { ...item, key, value: settings?.[key] ?? item.value }, settings)
     })
   }, [config])
 
+  const destroy = () => {
+    if (pane.current) {
+      pane.current.dispose()
+      pane.current = null
+    }
+  }
+
   return {
     settings: settings || getSettings(config),
-    reset: removeSettings
+    reset: removeSettings,
+    destroy
   }
 }
