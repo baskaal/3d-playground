@@ -1,16 +1,15 @@
 'use client'
 
-import { Canvas } from '@react-three/fiber'
-import { useConfig, makeSeparator, makeButton } from '@/app/hooks/useConfig'
-import { Box } from '@/app/components/Box'
-import { Scene } from './Scene'
-import { useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import randomColor from 'randomcolor'
+import { useConfig, makeSeparator, makeButton } from '@/app/hooks/useConfig'
+import { Canvas } from '@/app/components'
+import { Scene } from './Scene'
 
 const Page = () => {
   const [color, refreshColor] = useReducer(() => randomColor(), randomColor())
 
-  const { settings, reset } = useConfig({
+  const { settings, reset, destroy } = useConfig({
     color: { value: color },
     bgColor: { value: '#1c1c1c' },
     amount: { value: 25, min: 5, max: 100, step: 1 },
@@ -28,20 +27,17 @@ const Page = () => {
       reset()
       refreshColor()
     }),
-    ...makeSeparator(),
-    
+    credits: { value: 'Made with 🤍 for Paula on Valentines Day' }
   })
 
+  useEffect(() => {
+    return destroy
+  }, [])
+
   return (
-    <Box css={{
-      width: '100%',
-      div: { mih: '100vh' },
-      backgroundColor: settings?.bgColor
-    }}>
-      <Canvas>
-        <Scene settings={settings} />
-      </Canvas>
-    </Box>
+    <Canvas settings={settings}>
+      <Scene settings={settings} />
+    </Canvas>
   )
 }
 

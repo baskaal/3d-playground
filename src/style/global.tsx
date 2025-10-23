@@ -2,7 +2,7 @@ import { css } from 'csscomp'
 
 export const LocalStyle = css({
   body: {
-    bgc: 'black',
+    bgc: '#1c1c1c',
     c: 'white',
     ff: 'base',
     fw: 500
@@ -14,6 +14,8 @@ export const LocalStyle = css({
 
   '.tp-dfwv': {
     zIndex: 1000,
+    top: '10px !important',
+    right: '10px !important',
     width: '300px !important'
   }
 })
